@@ -2,11 +2,10 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {map, Observable} from "rxjs";
 import {Product} from "../common/product";
-import {data} from "autoprefixer";
-import {log} from "util";
+
 
 interface ProductResponse {
-    _embedded:{
+    _embedded: {
         products: Product[]
     }
 }
@@ -20,7 +19,8 @@ export class ProductService {
     constructor(private httpClient: HttpClient) {
     }
 
-    getProductList(): Observable<Product[]> {
-        return this.httpClient.get<ProductResponse>(this.baseUrl).pipe(map(v => v._embedded.products));
+    getProductList(categoryId: string | null): Observable<Product[]> {
+        const url = categoryId ? this.baseUrl + '/search/findByCategoryId?id=' + categoryId : this.baseUrl;
+        return this.httpClient.get<ProductResponse>(url).pipe(map(v => v._embedded.products));
     }
 }
